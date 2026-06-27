@@ -1,0 +1,26 @@
+# Xcode / Swift
+.DS_Store
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+DerivedData/
+build/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# The Xcode project is generated from project.yml by XcodeGen.
+# Run `xcodegen generate` (or `make`) to recreate it.
+Daybreak.xcodeproj/
+
+# Fastlane / CI (if added later)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
