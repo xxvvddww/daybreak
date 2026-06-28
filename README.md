@@ -44,9 +44,9 @@ Everything below has a sensible default and is easy to change:
 
 | Setting | Default | Where |
 | --- | --- | --- |
-| App bundle id | `au.com.tsagroup.daybreak` | `project.yml` |
-| Widget bundle id | `au.com.tsagroup.daybreak.widget` | `project.yml` |
-| App Group | `group.au.com.tsagroup.daybreak` | both `*.entitlements` files and `SharedStore.appGroupID` |
+| App bundle id | `com.daybreak.app` | `project.yml` |
+| Widget bundle id | `com.daybreak.app.widget` | `project.yml` |
+| App Group | `group.com.daybreak.app` | both `*.entitlements` files and `SharedStore.appGroupID` |
 | Development Team | _(empty — set yours)_ | `project.yml` → `DEVELOPMENT_TEAM` |
 | Deployment target | iOS 17.0 | `project.yml` |
 | Version / build | 1.0 / 1 | `project.yml` |

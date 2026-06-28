@@ -9,7 +9,7 @@ import Foundation
 /// cross-process updates until the group is set up. See README for setup.
 enum SharedStore {
     /// Must match the App Group capability on both the app and widget targets.
-    static let appGroupID = "group.au.com.tsagroup.daybreak"
+    static let appGroupID = "group.com.daybreak.app"
     static let snapshotKey = "daybreak.snapshot.v1"
 
     static var defaults: UserDefaults {
