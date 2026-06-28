@@ -13,13 +13,12 @@ struct LiveEarningsProvider: Sendable {
 
     func snapshot(
         inputs: ProfileInputs,
-        mode: EarningMode,
         at date: Date,
         calendar: Calendar = .current
     ) -> (breakdown: EarningsBreakdown, live: LiveEarnings) {
         let breakdown = calculator.breakdown(for: inputs)
         let (fraction, isRestDay) = clock.fraction(
-            mode: mode, inputs: inputs, breakdown: breakdown, at: date, calendar: calendar
+            inputs: inputs, breakdown: breakdown, at: date, calendar: calendar
         )
         let live = calculator.live(breakdown: breakdown, fraction: fraction, isRestDay: isRestDay)
         return (breakdown, live)

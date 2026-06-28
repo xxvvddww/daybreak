@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// The Setup screen: every input that drives the app, plus appearance and the
-/// live/demo mode switch. Bindings flow straight into the `ProfileStore`, which
-/// persists them and refreshes the widget.
+/// The Setup screen: every input that drives the app, plus appearance.
+/// Bindings flow straight into the `ProfileStore`, which persists them and
+/// refreshes the widget.
 struct SetupView: View {
     @Environment(\.theme) private var theme
     @Environment(ProfileStore.self) private var store
@@ -134,21 +134,11 @@ struct SetupView: View {
     // MARK: - Display
 
     private var displaySection: some View {
-        let demoBinding = Binding(
-            get: { store.mode == .demo },
-            set: { store.mode = $0 ? .demo : .live }
-        )
-        return VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 10) {
             FieldLabel("Appearance")
             SegmentedPicker(selection: $themeRaw, options: ThemePreference.allCases.map {
                 SegmentOption(value: $0.rawValue, label: $0.label)
             })
-            ToggleRow(
-                label: "Demo mode",
-                subtitle: "Cycle a sample day in fast-forward",
-                isOn: demoBinding
-            )
-            .padding(.top, 4)
         }
         .padding(.bottom, 20)
     }

@@ -71,7 +71,7 @@ final class DayClockTests: XCTestCase {
         let cal = calendar()
         // A Wednesday at 7am, before the 9am start.
         let date = cal.date(from: DateComponents(year: 2026, month: 6, day: 24, hour: 7))!
-        let result = clock.fraction(mode: .live, inputs: ProfileInputs(), breakdown: b, at: date, calendar: cal)
+        let result = clock.fraction(inputs: ProfileInputs(), breakdown: b, at: date, calendar: cal)
         XCTAssertEqual(result.fraction, 0, accuracy: 0.0001)
         XCTAssertFalse(result.isRestDay)
     }
@@ -81,7 +81,7 @@ final class DayClockTests: XCTestCase {
         let cal = calendar()
         // Wednesday 1pm: 4h into an 8h span → 0.5
         let date = cal.date(from: DateComponents(year: 2026, month: 6, day: 24, hour: 13))!
-        let result = clock.fraction(mode: .live, inputs: ProfileInputs(), breakdown: b, at: date, calendar: cal)
+        let result = clock.fraction(inputs: ProfileInputs(), breakdown: b, at: date, calendar: cal)
         XCTAssertEqual(result.fraction, 0.5, accuracy: 0.0001)
     }
 
@@ -90,17 +90,8 @@ final class DayClockTests: XCTestCase {
         let cal = calendar()
         // Sunday 28 June 2026.
         let date = cal.date(from: DateComponents(year: 2026, month: 6, day: 28, hour: 12))!
-        let result = clock.fraction(mode: .live, inputs: ProfileInputs(), breakdown: b, at: date, calendar: cal)
+        let result = clock.fraction(inputs: ProfileInputs(), breakdown: b, at: date, calendar: cal)
         XCTAssertTrue(result.isRestDay)
         XCTAssertEqual(result.fraction, 0, accuracy: 0.0001)
-    }
-
-    func testDemoLoops() {
-        let b = calc.breakdown(for: ProfileInputs())
-        let cal = calendar()
-        let result = clock.fraction(mode: .demo, inputs: ProfileInputs(), breakdown: b,
-                                    at: Date(timeIntervalSinceReferenceDate: 40), calendar: cal)
-        XCTAssertEqual(result.fraction, 0.5, accuracy: 0.0001)   // 40 / 80
-        XCTAssertFalse(result.isRestDay)
     }
 }

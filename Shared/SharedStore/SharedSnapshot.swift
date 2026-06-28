@@ -7,12 +7,10 @@ import Foundation
 /// SwiftData or the app's view layer.
 struct SharedSnapshot: Codable, Equatable, Sendable {
     var inputs: ProfileInputs
-    var mode: EarningMode
     var updatedAt: Date
 
-    init(inputs: ProfileInputs, mode: EarningMode, updatedAt: Date) {
+    init(inputs: ProfileInputs, updatedAt: Date) {
         self.inputs = inputs
-        self.mode = mode
         self.updatedAt = updatedAt
     }
 
@@ -20,6 +18,6 @@ struct SharedSnapshot: Codable, Equatable, Sendable {
     /// before the app has written real data (fresh install, previews, or a
     /// misconfigured App Group).
     static func placeholder(updatedAt: Date) -> SharedSnapshot {
-        SharedSnapshot(inputs: ProfileInputs(), mode: .live, updatedAt: updatedAt)
+        SharedSnapshot(inputs: ProfileInputs(), updatedAt: updatedAt)
     }
 }

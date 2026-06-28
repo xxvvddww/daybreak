@@ -97,10 +97,9 @@ trivially testable and identical in the app and the widget. The app persists
 - **AppStorage** — lightweight prefs: appearance and onboarding state.
 - **App Group `UserDefaults`** — the snapshot bridged to the widget.
 
-**Live vs. demo.** `DayClock` computes how far through the working day you are:
-in **Live** mode from the real clock (with rest-day handling), in **Demo** mode
-from a sped-up 80-second loop (great for screenshots and exploring). The Today
-and Damage screens tick via `TimelineView`.
+**Live ticking.** `DayClock` computes how far through the working day you are
+from the real wall clock (with rest-day handling); the Today and Damage screens
+tick via `TimelineView` so figures accrue in real time.
 
 ---
 

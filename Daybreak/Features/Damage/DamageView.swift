@@ -5,13 +5,12 @@ import SwiftUI
 struct DamageView: View {
     @Environment(ProfileStore.self) private var store
     private let provider = LiveEarningsProvider()
-
-    private var tickInterval: Double { store.mode == .demo ? 0.1 : 0.5 }
+    private let tickInterval: Double = 0.5
 
     var body: some View {
         FeatureScreen {
             TimelineView(.periodic(from: .now, by: tickInterval)) { context in
-                let snapshot = provider.snapshot(inputs: store.inputs, mode: store.mode, at: context.date)
+                let snapshot = provider.snapshot(inputs: store.inputs, at: context.date)
                 DamageContent(breakdown: snapshot.breakdown, live: snapshot.live, now: context.date)
             }
         }

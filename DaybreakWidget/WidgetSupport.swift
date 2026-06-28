@@ -36,7 +36,7 @@ enum WidgetEngine {
     private static let provider = LiveEarningsProvider()
 
     static func figures(for entry: DaybreakEntry) -> (breakdown: EarningsBreakdown, live: LiveEarnings) {
-        provider.snapshot(inputs: entry.snapshot.inputs, mode: entry.snapshot.mode, at: entry.date)
+        provider.snapshot(inputs: entry.snapshot.inputs, at: entry.date)
     }
 }
 

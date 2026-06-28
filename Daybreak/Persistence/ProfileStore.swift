@@ -7,22 +7,16 @@ import WidgetKit
 
 /// Owns the user's editable state and all of its side effects.
 ///
-/// Reads happen through `inputs` / `mode`; writes flow back to SwiftData and to
-/// the App Group snapshot the widget consumes, and trigger a widget reload. The
-/// engine never touches this type — it only ever sees `ProfileInputs` — which
-/// keeps the maths pure and this class the single place persistence lives.
+/// Reads happen through `inputs`; writes flow back to SwiftData and to the App
+/// Group snapshot the widget consumes, and trigger a widget reload. The engine
+/// never touches this type — it only ever sees `ProfileInputs` — which keeps the
+/// maths pure and this class the single place persistence lives.
 @MainActor
 @Observable
 final class ProfileStore {
     /// The user's financial inputs. Mutating this persists everywhere.
     var inputs: ProfileInputs {
         didSet { guard inputs != oldValue else { return }; commit() }
-    }
-
-    /// Live vs. demo. Shared with the widget, so it lives here rather than in
-    /// `@AppStorage`.
-    var mode: EarningMode {
-        didSet { guard mode != oldValue else { return }; commit() }
     }
 
     private let context: ModelContext
@@ -33,7 +27,6 @@ final class ProfileStore {
         self.context = context
         self.profile = Self.fetchOrCreateProfile(in: context)
         self.inputs = profile.inputs
-        self.mode = SharedStore.load()?.mode ?? .live
         // Make sure the widget has a snapshot from first launch.
         writeSnapshot()
     }
@@ -58,7 +51,7 @@ final class ProfileStore {
         // The snapshot itself is cheap (App Group UserDefaults) and is written
         // immediately so the widget always has fresh data. The widget reload is
         // debounced so dragging a slider doesn't reload timelines on every tick.
-        SharedStore.save(SharedSnapshot(inputs: inputs, mode: mode, updatedAt: .now))
+        SharedStore.save(SharedSnapshot(inputs: inputs, updatedAt: .now))
         #if canImport(WidgetKit)
         reloadTask?.cancel()
         reloadTask = Task { [weak self] in
