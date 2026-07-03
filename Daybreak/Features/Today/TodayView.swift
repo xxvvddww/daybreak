@@ -8,12 +8,39 @@ struct TodayView: View {
     private let tickInterval: Double = 0.5
 
     var body: some View {
-        FeatureScreen {
-            TimelineView(.periodic(from: .now, by: tickInterval)) { context in
-                let snapshot = provider.snapshot(inputs: store.inputs, at: context.date)
+        TimelineView(.periodic(from: .now, by: tickInterval)) { context in
+            let snapshot = provider.snapshot(inputs: store.inputs, at: context.date)
+            FeatureScreen {
                 TodayContent(breakdown: snapshot.breakdown, live: snapshot.live)
             }
+            .background(DaylightGlow(fraction: snapshot.live.fraction, isRestDay: snapshot.live.isRestDay))
         }
+    }
+}
+
+/// A soft golden radiance that drifts across the top of the screen with the
+/// sun's position through the working day — dawn at the left edge, knock-off
+/// at the right. Purely ambient; hidden on rest days.
+private struct DaylightGlow: View {
+    @Environment(\.theme) private var theme
+    let fraction: Double
+    let isRestDay: Bool
+
+    var body: some View {
+        GeometryReader { geo in
+            if !isRestDay {
+                let x = 0.18 + 0.64 * min(max(fraction, 0), 1)
+                RadialGradient(
+                    colors: [theme.gold.opacity(0.16), .clear],
+                    center: UnitPoint(x: x, y: 0.0),
+                    startRadius: 0,
+                    endRadius: geo.size.width * 0.85
+                )
+            }
+        }
+        .ignoresSafeArea()
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
 

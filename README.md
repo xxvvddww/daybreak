@@ -34,7 +34,10 @@ open Daybreak.xcodeproj
 #    Then build & run (⌘R).
 ```
 
-Requires **Xcode 16+** and **iOS 17+** (SwiftData).
+Requires **Xcode 16+** and **iOS 17+** (SwiftData). Building with **Xcode 26+**
+additionally enables the Liquid Glass treatments (floating glass tab bar, glass
+cards) on devices running iOS 26 — older toolchains and OS versions fall back
+to the hand-tuned material look automatically.
 
 ---
 

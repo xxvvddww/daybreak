@@ -57,7 +57,8 @@ struct Theme: Sendable {
 
 extension Theme {
     static let light = Theme(
-        background: Color(hex: "FFFFFF"),
+        // Warm paper rather than clinical white — the quiet-luxury canvas.
+        background: Color(hex: "FBFAF7"),
         surface: Color(hex: "F5F4F1"),
         surface2: Color(hex: "ECEAE4"),
         ink: Color(hex: "1A1814"),
