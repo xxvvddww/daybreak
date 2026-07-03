@@ -21,6 +21,7 @@ struct EarnedTodayWidget: Widget {
 
 private struct EarnedTodayEntryView: View {
     @Environment(\.widgetFamily) private var family
+    @Environment(\.colorScheme) private var scheme
     let entry: DaybreakEntry
 
     var body: some View {
@@ -43,48 +44,63 @@ private struct EarnedTodayEntryView: View {
 
     private func small(_ f: (breakdown: EarningsBreakdown, live: LiveEarnings)) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header
+            header(isRestDay: f.live.isRestDay)
             Spacer(minLength: 4)
-            Text(DaybreakFormat.money(f.live.earnedGross))
-                .font(.system(size: 30, weight: .medium, design: .monospaced))
-                .minimumScaleFactor(0.5)
-                .lineLimit(1)
+            hero(f, size: 30)
             WidgetDayBar(fraction: f.live.fraction, effectiveRate: f.breakdown.effectiveRate)
                 .padding(.top, 10)
         }
         .foregroundStyle(Brand.paper)
-        .widgetContainerBackground { Brand.wallpaper(dark: false) }
+        .widgetContainerBackground { Brand.wallpaper(dark: scheme == .dark) }
     }
 
     private func medium(_ f: (breakdown: EarningsBreakdown, live: LiveEarnings)) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header
+            header(isRestDay: f.live.isRestDay)
             Spacer(minLength: 4)
-            Text(DaybreakFormat.money(f.live.earnedGross))
-                .font(.system(size: 34, weight: .medium, design: .monospaced))
-                .minimumScaleFactor(0.5)
-                .lineLimit(1)
+            hero(f, size: 34)
             WidgetDayBar(fraction: f.live.fraction, effectiveRate: f.breakdown.effectiveRate)
                 .padding(.top, 10)
-            HStack(spacing: 0) {
-                split("You keep", DaybreakFormat.money(f.live.earnedKeep, fractionDigits: 0), Color(hex: "A6E8C6"), first: true)
-                split("To ATO", DaybreakFormat.money(f.live.earnedTax, fractionDigits: 0), Color(hex: "F0B089"))
-                split("Super", DaybreakFormat.money(f.live.earnedSuper, fractionDigits: 0), Color(hex: "F3D69A"))
+            if f.live.isRestDay {
+                Text("You're off the clock today.")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Brand.paper.opacity(0.72))
+                    .padding(.top, 12)
+            } else {
+                HStack(spacing: 0) {
+                    split("You keep", DaybreakFormat.money(f.live.earnedKeep, fractionDigits: 0), Color(hex: "A6E8C6"), first: true)
+                    split("To ATO", DaybreakFormat.money(f.live.earnedTax, fractionDigits: 0), Color(hex: "F0B089"))
+                    split("Super", DaybreakFormat.money(f.live.earnedSuper, fractionDigits: 0), Color(hex: "F3D69A"))
+                }
+                .padding(.top, 12)
             }
-            .padding(.top, 12)
         }
         .foregroundStyle(Brand.paper)
-        .widgetContainerBackground { Brand.wallpaper(dark: false) }
+        .widgetContainerBackground { Brand.wallpaper(dark: scheme == .dark) }
     }
 
-    private var header: some View {
+    @ViewBuilder
+    private func hero(_ f: (breakdown: EarningsBreakdown, live: LiveEarnings), size: CGFloat) -> some View {
+        if f.live.isRestDay {
+            Text("Day off")
+                .font(.system(size: size - 4, weight: .medium, design: .serif))
+        } else {
+            Text(DaybreakFormat.money(f.live.earnedGross))
+                .font(.system(size: size, weight: .medium, design: .monospaced))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+                .contentTransition(.numericText(value: f.live.earnedGross))
+        }
+    }
+
+    private func header(isRestDay: Bool) -> some View {
         HStack {
-            Text("EARNED TODAY")
+            Text(isRestDay ? "TODAY" : "EARNED TODAY")
                 .font(.system(size: 10, weight: .bold))
                 .tracking(1.2)
                 .foregroundStyle(Brand.paper.opacity(0.82))
             Spacer()
-            Image(systemName: "sun.max.fill")
+            Image(systemName: isRestDay ? "moon.fill" : "sun.max.fill")
                 .font(.system(size: 13))
                 .foregroundStyle(Brand.paper.opacity(0.9))
         }
@@ -112,8 +128,8 @@ private struct EarnedTodayEntryView: View {
     // MARK: - Lock screen
 
     private func inline(_ f: (breakdown: EarningsBreakdown, live: LiveEarnings)) -> some View {
-        Label("\(DaybreakFormat.money(f.live.earnedGross, fractionDigits: 0)) earned today",
-              systemImage: "sun.max.fill")
+        Label(f.live.isRestDay ? "Day off today" : "\(DaybreakFormat.money(f.live.earnedGross, fractionDigits: 0)) earned today",
+              systemImage: f.live.isRestDay ? "moon.fill" : "sun.max.fill")
     }
 
     private func circular(_ f: (breakdown: EarningsBreakdown, live: LiveEarnings)) -> some View {
@@ -129,8 +145,8 @@ private struct EarnedTodayEntryView: View {
 
     private func rectangular(_ f: (breakdown: EarningsBreakdown, live: LiveEarnings)) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text("Earned today").font(.system(size: 12, weight: .semibold))
-            Text(DaybreakFormat.money(f.live.earnedGross, fractionDigits: 0))
+            Text(f.live.isRestDay ? "Today" : "Earned today").font(.system(size: 12, weight: .semibold))
+            Text(f.live.isRestDay ? "Day off" : DaybreakFormat.money(f.live.earnedGross, fractionDigits: 0))
                 .font(.system(size: 18, weight: .medium, design: .monospaced))
             ProgressView(value: min(max(f.live.fraction, 0), 1))
                 .tint(.primary)

@@ -45,5 +45,6 @@ struct DayPicker: View {
                 .accessibilityAddTraits(isOn ? [.isSelected, .isButton] : [.isButton])
             }
         }
+        .sensoryFeedback(.selection, trigger: selection)
     }
 }

@@ -6,7 +6,7 @@ struct StatsView: View {
     @Environment(\.theme) private var theme
     @Environment(ProfileStore.self) private var store
 
-    @State private var regionCode = "WA"
+    @AppStorage("statsRegionCode") private var regionCode = "WA"
 
     private let calculator = EarningsCalculator()
     private let distribution = IncomeDistribution()

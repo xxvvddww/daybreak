@@ -6,9 +6,13 @@ struct StepButton: View {
     let systemImage: String
     let accessibilityLabel: String
     let action: () -> Void
+    @State private var taps = 0
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            taps += 1
+            action()
+        } label: {
             Image(systemName: systemImage)
                 .font(.system(size: 16, weight: .medium))
                 .foregroundStyle(theme.ink)
@@ -17,6 +21,7 @@ struct StepButton: View {
                 .overlay(Circle().strokeBorder(theme.hairline, lineWidth: 1))
         }
         .buttonStyle(.plain)
+        .sensoryFeedback(.selection, trigger: taps)
         .accessibilityLabel(accessibilityLabel)
     }
 }

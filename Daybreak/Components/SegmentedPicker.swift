@@ -40,5 +40,6 @@ struct SegmentedPicker<Value: Hashable>: View {
         }
         .padding(3)
         .background(theme.seg, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .sensoryFeedback(.selection, trigger: selection)
     }
 }

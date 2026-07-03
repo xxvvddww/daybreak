@@ -18,6 +18,7 @@ struct FreedomWidget: Widget {
 
 private struct FreedomEntryView: View {
     @Environment(\.widgetFamily) private var family
+    @Environment(\.colorScheme) private var scheme
     let entry: DaybreakEntry
 
     var body: some View {
@@ -64,7 +65,7 @@ private struct FreedomEntryView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundStyle(Brand.paper)
-            .widgetContainerBackground { Brand.wallpaper(dark: false) }
+            .widgetContainerBackground { Brand.wallpaper(dark: scheme == .dark) }
         }
     }
 }

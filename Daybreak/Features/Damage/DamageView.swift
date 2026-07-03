@@ -24,6 +24,7 @@ private struct DamageContent: View {
     let now: Date
 
     private let damageCalculator = DamageCalculator()
+    private let config = CountryConfig.australia
 
     var body: some View {
         let report = damageCalculator.report(breakdown: breakdown, now: now)
@@ -46,10 +47,10 @@ private struct DamageContent: View {
             )
             StatCard(
                 bigText: DaybreakFormat.money(report.lifetimeTax, fractionDigits: 0),
-                label: "Gone to the ATO over a 45-year career.",
+                label: "Gone to the ATO over a \(config.careerYears)-year career.",
                 subMarkdown: "On today's salary with no pay rises. With raises, it's far more.",
                 color: theme.tax,
-                info: "This year's tax (\(DaybreakFormat.money(breakdown.tax, fractionDigits: 0))) × 45 years. Ignores pay rises and rate changes."
+                info: "This year's tax (\(DaybreakFormat.money(breakdown.tax, fractionDigits: 0))) × \(config.careerYears) years. Ignores pay rises and rate changes."
             )
             couldBuy(report: report)
             quote
@@ -100,6 +101,8 @@ private struct DamageContent: View {
                 .mono(36, weight: .medium, relativeTo: .largeTitle)
                 .foregroundStyle(theme.tax)
                 .minimumScaleFactor(0.5).lineLimit(1)
+                .contentTransition(.numericText(value: live.earnedTax))
+                .animation(.snappy(duration: 0.4), value: live.earnedTax)
                 .padding(.top, 8)
             Text("Climbing every second you're on the clock.")
                 .sans(12.5).foregroundStyle(theme.summaryMuted)

@@ -39,5 +39,6 @@ struct CustomTabBar: View {
         .overlay(alignment: .top) {
             Rectangle().fill(theme.hairline).frame(height: 1)
         }
+        .sensoryFeedback(.selection, trigger: selection)
     }
 }

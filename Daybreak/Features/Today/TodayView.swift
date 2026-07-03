@@ -53,6 +53,8 @@ private struct TodayContent: View {
                 .foregroundStyle(theme.ink)
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
+                .contentTransition(.numericText(value: live.earnedGross))
+                .animation(.snappy(duration: 0.4), value: live.earnedGross)
             if live.isRestDay {
                 Text("You're off the clock today")
                     .sans(13, weight: .medium)

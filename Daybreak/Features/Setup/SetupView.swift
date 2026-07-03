@@ -21,7 +21,7 @@ struct SetupView: View {
             superSection
 
             ToggleRow(label: "Medicare levy",
-                      subtitle: "Adds 2% on income over ~$27,222",
+                      subtitle: "Adds \(Int(config.medicareLevyRate * 100))% on income over ~\(DaybreakFormat.money(config.medicareLevyThreshold, fractionDigits: 0))",
                       isOn: store.binding(\.medicareLevy))
                 .padding(.bottom, 16)
 

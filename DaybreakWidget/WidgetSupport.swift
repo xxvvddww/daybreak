@@ -24,8 +24,26 @@ struct DaybreakProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<DaybreakEntry>) -> Void) {
         let snapshot = SharedStore.load() ?? .placeholder(updatedAt: Date())
         let now = Date()
-        let entries = stride(from: 0, through: 360, by: 15).map { minute in
-            DaybreakEntry(date: now.addingTimeInterval(Double(minute) * 60), snapshot: snapshot)
+
+        // Timeline entries are cheap (only reloads count against the WidgetKit
+        // budget), so tick every minute while the user is on the clock — the
+        // earned figure visibly moves — and every 15 minutes otherwise.
+        let breakdown = EarningsCalculator().breakdown(for: snapshot.inputs)
+        let clock = DayClock()
+        let calendar = Calendar.current
+
+        var entries = [DaybreakEntry(date: now, snapshot: snapshot)]
+        for minute in 1...360 {
+            let date = now.addingTimeInterval(Double(minute) * 60)
+            let comps = calendar.dateComponents([.hour, .minute], from: date)
+            let secondsOfDay = Double((comps.hour ?? 0) * 3600 + (comps.minute ?? 0) * 60)
+            let onTheClock = !clock.isRestDay(inputs: snapshot.inputs, date: date, calendar: calendar)
+                && secondsOfDay >= breakdown.startSeconds
+                && secondsOfDay <= breakdown.startSeconds + breakdown.spanSeconds
+            let keep = onTheClock ? (minute <= 180 || minute % 5 == 0) : (minute % 15 == 0)
+            if keep {
+                entries.append(DaybreakEntry(date: date, snapshot: snapshot))
+            }
         }
         completion(Timeline(entries: entries, policy: .atEnd))
     }

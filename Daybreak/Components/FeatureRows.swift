@@ -28,6 +28,7 @@ struct ToggleRow: View {
         .padding(.vertical, 13)
         .padding(.horizontal, 16)
         .glassCard(cornerRadius: 14)
+        .sensoryFeedback(.selection, trigger: isOn)
         .accessibilityElement(children: .combine)
     }
 }
